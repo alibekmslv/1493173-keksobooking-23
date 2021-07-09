@@ -1,6 +1,6 @@
 import {getRandomInt, getRandomFloatingPoint} from './utils.js';
 
-const GENERATED_OFFERS_COUNT = 10;
+const GENERATED_OFFERS_COUNT = 1;
 const OFFER_TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECKIN_OPTIONS = ['12:00', '13:00', '14:00'];
 const OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -55,9 +55,9 @@ const generateOffer = () => {
       guests: getRandomInt(1, 60),
       checkin: getRandomArrayElement(CHECKIN_OPTIONS),
       checkout: getRandomArrayElement(CHECKIN_OPTIONS),
-      features: getRandomArrayShuffledElements(OFFER_FEATURES, 21),
+      features: getRandomArrayShuffledElements(OFFER_FEATURES),
       description: 'Уютная квартира в Токио',
-      photos: getRandomArrayShuffledElements(OFFER_PHOTOS, 6),
+      photos: getRandomArrayShuffledElements(OFFER_PHOTOS),
     },
     location: {
       lat: offerRandomLat,
