@@ -1,3 +1,1 @@
-import {generatedOffers} from './data.js';
-
-generatedOffers;
+import './card.js';
