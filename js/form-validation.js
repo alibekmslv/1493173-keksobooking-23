@@ -6,11 +6,13 @@ const CAPACITY_VALIDITY_DEFAULT_TEXT = 'Количество гостей дол
 const MAX_ROOMS_VALUE = 100;
 
 const addForm = document.querySelector('.ad-form');
-const offerTitleInput = addForm.querySelector('input[name="title"]');
-const offerPriceInput = addForm.querySelector('input[name="price"]');
-const offerRoomsQuantitySelect = addForm.querySelector('select[name="rooms"]');
-const offerCapacitySelect = addForm.querySelector('select[name="capacity"]');
-const offerTypeSelect = addForm.querySelector('select[name="type"]');
+const offerTitleInput = addForm.querySelector('#title');
+const offerPriceInput = addForm.querySelector('#price');
+const offerRoomsQuantitySelect = addForm.querySelector('#room_number');
+const offerCapacitySelect = addForm.querySelector('#capacity');
+const offerTypeSelect = addForm.querySelector('#type');
+const offerCheckinSelect = addForm.querySelector('#timein');
+const offerCheckoutSelect = addForm.querySelector('#timeout');
 
 offerTitleInput.addEventListener('input', () => {
   const valueLength = offerTitleInput.value.length;
