@@ -1,6 +1,6 @@
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
-const MIN_PRICE_VALUE = 0;
+
 const MAX_PRICE_VALUE = 1000000;
 const CAPACITY_VALIDITY_DEFAULT_TEXT = 'Количество гостей должно быть меньше или равно количеству комнат';
 const MAX_ROOMS_VALUE = 100;
@@ -10,6 +10,7 @@ const offerTitleInput = addForm.querySelector('input[name="title"]');
 const offerPriceInput = addForm.querySelector('input[name="price"]');
 const offerRoomsQuantitySelect = addForm.querySelector('select[name="rooms"]');
 const offerCapacitySelect = addForm.querySelector('select[name="capacity"]');
+const offerTypeSelect = addForm.querySelector('select[name="type"]');
 
 offerTitleInput.addEventListener('input', () => {
   const valueLength = offerTitleInput.value.length;
@@ -29,9 +30,10 @@ offerTitleInput.addEventListener('input', () => {
 
 offerPriceInput.addEventListener('input', () => {
   const inputValue = parseFloat(offerPriceInput.value);
+  const minValue = parseFloat(offerPriceInput.getAttribute('min'));
 
-  if (inputValue < MIN_PRICE_VALUE) {
-    offerPriceInput.setCustomValidity(`Цена не может быть ниже ${MIN_PRICE_VALUE}`);
+  if (inputValue < minValue) {
+    offerPriceInput.setCustomValidity(`"${offerTypeSelect.options[offerTypeSelect.selectedIndex].text}" – минимальная цена за ночь ${minValue}`);
   } else if (inputValue > MAX_PRICE_VALUE) {
     offerPriceInput.setCustomValidity(`Цена не должна превышать ${MAX_PRICE_VALUE}`);
   } else if (offerPriceInput.validity.valueMissing) {
@@ -41,6 +43,12 @@ offerPriceInput.addEventListener('input', () => {
   }
 
   offerPriceInput.reportValidity();
+});
+
+offerPriceInput.addEventListener('invalid', () => {
+  if (offerPriceInput.validity.valueMissing) {
+    offerPriceInput.setCustomValidity('Обязательное поле');
+  }
 });
 
 
@@ -68,3 +76,28 @@ const roomsQuantityHandler = () => {
 offerRoomsQuantitySelect.addEventListener('change', roomsQuantityHandler);
 offerCapacitySelect.addEventListener('change', roomsQuantityHandler);
 
+
+const offerTypeHandler = () => {
+  switch (offerTypeSelect.value) {
+    case 'bungalow':
+      offerPriceInput.setAttribute('min', 0);
+      break;
+    case 'flat':
+      offerPriceInput.setAttribute('min', 1000);
+      break;
+    case 'hotel':
+      offerPriceInput.setAttribute('min', 3000);
+      break;
+    case 'house':
+      offerPriceInput.setAttribute('min', 5000);
+      break;
+    case 'palace':
+      offerPriceInput.setAttribute('min', 10000);
+      break;
+    default:
+      break;
+  }
+};
+offerTypeHandler();
+
+offerTypeSelect.addEventListener('change', offerTypeHandler);
