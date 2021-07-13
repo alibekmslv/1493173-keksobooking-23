@@ -1,5 +1,3 @@
-const MIN_TITLE_LENGTH = 30;
-const MAX_TITLE_LENGTH = 100;
 const CAPACITY_VALIDITY_DEFAULT_TEXT = 'Количество гостей должно быть меньше или равно количеству комнат';
 const MAX_ROOMS_VALUE = 100;
 const BUNGALOW_MIN_PRICE = 0;
@@ -19,12 +17,13 @@ const offerCheckoutSelect = addForm.querySelector('#timeout');
 
 offerTitleInput.addEventListener('input', () => {
   const valueLength = offerTitleInput.value.length;
+  const {tooShort, tooLong, valueMissing} = offerTitleInput.validity;
 
-  if (valueLength < MIN_TITLE_LENGTH) {
-    offerTitleInput.setCustomValidity(`Еще ${MIN_TITLE_LENGTH - valueLength} симв.`);
-  } else if (valueLength > MAX_TITLE_LENGTH) {
-    offerTitleInput.setCustomValidity(`Удалите лишние ${valueLength - MAX_TITLE_LENGTH} симв.`);
-  } else if (offerTitleInput.validity.valueMissing) {
+  if (tooShort) {
+    offerTitleInput.setCustomValidity(`Еще ${offerTitleInput.getAttribute('minlength') - valueLength} симв.`);
+  } else if (tooLong) {
+    offerTitleInput.setCustomValidity(`Удалите лишние ${valueLength - offerTitleInput.getAttribute('maxlength')} симв.`);
+  } else if (valueMissing) {
     offerTitleInput.setCustomValidity('Обязательное поле');
   } else {
     offerTitleInput.setCustomValidity('');
@@ -51,13 +50,6 @@ offerPriceInput.addEventListener('input', () => {
 
   offerPriceInput.reportValidity();
 });
-
-offerPriceInput.addEventListener('invalid', () => {
-  if (offerPriceInput.validity.valueMissing) {
-    offerPriceInput.setCustomValidity('Обязательное поле');
-  }
-});
-
 
 if (offerRoomsQuantitySelect.value < offerCapacitySelect.value) {
   offerCapacitySelect.setCustomValidity(CAPACITY_VALIDITY_DEFAULT_TEXT);
