@@ -1,7 +1,5 @@
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
-
-const MAX_PRICE_VALUE = 1000000;
 const CAPACITY_VALIDITY_DEFAULT_TEXT = 'Количество гостей должно быть меньше или равно количеству комнат';
 const MAX_ROOMS_VALUE = 100;
 const BUNGALOW_MIN_PRICE = 0;
@@ -36,14 +34,16 @@ offerTitleInput.addEventListener('input', () => {
 });
 
 offerPriceInput.addEventListener('input', () => {
-  const inputValue = parseFloat(offerPriceInput.value);
-  const minValue = parseFloat(offerPriceInput.getAttribute('min'));
+  const minValue = offerPriceInput.getAttribute('min');
+  const maxValue = offerPriceInput.getAttribute('max');
+  const {rangeOverflow, rangeUnderflow, valueMissing} = offerPriceInput.validity;
+  const offerTypeText = offerTypeSelect.options[offerTypeSelect.selectedIndex].text;
 
-  if (inputValue < minValue) {
-    offerPriceInput.setCustomValidity(`"${offerTypeSelect.options[offerTypeSelect.selectedIndex].text}" – минимальная цена за ночь ${minValue}`);
-  } else if (inputValue > MAX_PRICE_VALUE) {
-    offerPriceInput.setCustomValidity(`Цена не должна превышать ${MAX_PRICE_VALUE}`);
-  } else if (offerPriceInput.validity.valueMissing) {
+  if (rangeUnderflow) {
+    offerPriceInput.setCustomValidity(`"${offerTypeText}" – минимальная цена за ночь ${minValue}`);
+  } else if (rangeOverflow) {
+    offerPriceInput.setCustomValidity(`Цена не должна превышать ${maxValue}`);
+  } else if (valueMissing) {
     offerPriceInput.setCustomValidity('Обязательное поле');
   } else {
     offerPriceInput.setCustomValidity('');
@@ -71,6 +71,8 @@ const checkRoomsCapacity = () => {
 
   if (roomsValue >= MAX_ROOMS_VALUE && capacityValue !== 0) {
     offerCapacitySelect.setCustomValidity(`${MAX_ROOMS_VALUE} комнат – не для гостей`);
+  } else if (roomsValue < MAX_ROOMS_VALUE && capacityValue === 0) {
+    offerCapacitySelect.setCustomValidity(`${roomsValue} комн. для гостей`);
   } else if (roomsValue >= capacityValue) {
     offerCapacitySelect.setCustomValidity('');
   } else {
