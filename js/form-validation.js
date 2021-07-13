@@ -103,3 +103,11 @@ const offerTypeHandler = () => {
 offerTypeHandler();
 
 offerTypeSelect.addEventListener('change', offerTypeHandler);
+
+offerCheckinSelect.addEventListener('change', () => {
+  offerCheckoutSelect.selectedIndex = offerCheckinSelect.options.selectedIndex;
+});
+
+offerCheckoutSelect.addEventListener('change', () => {
+  offerCheckinSelect.selectedIndex = offerCheckoutSelect.options.selectedIndex;
+});
