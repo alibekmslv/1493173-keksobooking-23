@@ -4,6 +4,11 @@ const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE_VALUE = 1000000;
 const CAPACITY_VALIDITY_DEFAULT_TEXT = 'Количество гостей должно быть меньше или равно количеству комнат';
 const MAX_ROOMS_VALUE = 100;
+const BUNGALOW_MIN_PRICE = 0;
+const FLAT_MIN_PRICE = 1000;
+const HOTEL_MIN_PRICE = 3000;
+const HOUSE_MIN_PRICE = 5000;
+const PALACE_MIN_PRICE = 10000;
 
 const addForm = document.querySelector('.ad-form');
 const offerTitleInput = addForm.querySelector('#title');
@@ -60,7 +65,7 @@ if (offerRoomsQuantitySelect.value < offerCapacitySelect.value) {
   offerCapacitySelect.setCustomValidity('');
 }
 
-const roomsQuantityHandler = () => {
+const checkRoomsCapacity = () => {
   const roomsValue = parseFloat(offerRoomsQuantitySelect.value);
   const capacityValue = parseFloat(offerCapacitySelect.value);
 
@@ -75,34 +80,41 @@ const roomsQuantityHandler = () => {
   offerCapacitySelect.reportValidity();
 };
 
-offerRoomsQuantitySelect.addEventListener('change', roomsQuantityHandler);
-offerCapacitySelect.addEventListener('change', roomsQuantityHandler);
+offerRoomsQuantitySelect.addEventListener('change', () => {
+  checkRoomsCapacity();
+});
+
+offerCapacitySelect.addEventListener('change', () => {
+  checkRoomsCapacity();
+});
 
 
-const offerTypeHandler = () => {
+const checkOfferType = () => {
   switch (offerTypeSelect.value) {
     case 'bungalow':
-      offerPriceInput.setAttribute('min', 0);
+      offerPriceInput.setAttribute('min', BUNGALOW_MIN_PRICE);
       break;
     case 'flat':
-      offerPriceInput.setAttribute('min', 1000);
+      offerPriceInput.setAttribute('min', FLAT_MIN_PRICE);
       break;
     case 'hotel':
-      offerPriceInput.setAttribute('min', 3000);
+      offerPriceInput.setAttribute('min', HOTEL_MIN_PRICE);
       break;
     case 'house':
-      offerPriceInput.setAttribute('min', 5000);
+      offerPriceInput.setAttribute('min', HOUSE_MIN_PRICE);
       break;
     case 'palace':
-      offerPriceInput.setAttribute('min', 10000);
+      offerPriceInput.setAttribute('min', PALACE_MIN_PRICE);
       break;
     default:
       break;
   }
 };
-offerTypeHandler();
+checkOfferType();
 
-offerTypeSelect.addEventListener('change', offerTypeHandler);
+offerTypeSelect.addEventListener('change', () => {
+  checkOfferType();
+});
 
 offerCheckinSelect.addEventListener('change', () => {
   offerCheckoutSelect.selectedIndex = offerCheckinSelect.options.selectedIndex;
