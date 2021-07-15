@@ -14,6 +14,13 @@ const offerCapacitySelect = addForm.querySelector('#capacity');
 const offerTypeSelect = addForm.querySelector('#type');
 const offerCheckinSelect = addForm.querySelector('#timein');
 const offerCheckoutSelect = addForm.querySelector('#timeout');
+const offerTypeMap = {
+  bungalow: BUNGALOW_MIN_PRICE,
+  flat: FLAT_MIN_PRICE,
+  hotel: HOTEL_MIN_PRICE,
+  house: HOUSE_MIN_PRICE,
+  palace: PALACE_MIN_PRICE,
+};
 
 offerTitleInput.addEventListener('input', () => {
   const valueLength = offerTitleInput.value.length;
@@ -84,25 +91,7 @@ offerCapacitySelect.addEventListener('change', () => {
 
 
 const checkOfferType = () => {
-  switch (offerTypeSelect.value) {
-    case 'bungalow':
-      offerPriceInput.setAttribute('min', BUNGALOW_MIN_PRICE);
-      break;
-    case 'flat':
-      offerPriceInput.setAttribute('min', FLAT_MIN_PRICE);
-      break;
-    case 'hotel':
-      offerPriceInput.setAttribute('min', HOTEL_MIN_PRICE);
-      break;
-    case 'house':
-      offerPriceInput.setAttribute('min', HOUSE_MIN_PRICE);
-      break;
-    case 'palace':
-      offerPriceInput.setAttribute('min', PALACE_MIN_PRICE);
-      break;
-    default:
-      break;
-  }
+  offerPriceInput.setAttribute('min', offerTypeMap[offerTypeSelect.value]);
 };
 checkOfferType();
 
