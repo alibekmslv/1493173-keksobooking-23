@@ -43,7 +43,7 @@ mainPinMarker.on('moveend', (evt) => {
   offerAddressInput.value = `${cutNumber(lat, 5)}, ${cutNumber(lng, 5)}`;
 });
 
-generatedOffers.forEach((point) => {
+const createMarker = (point) => {
   const {lat, lng} = point.location;
 
   const icon = L.icon({
@@ -54,4 +54,8 @@ generatedOffers.forEach((point) => {
 
   const marker = L.marker({lat, lng}, {icon});
   marker.addTo(map).bindPopup(createCard(point));
+};
+
+generatedOffers.forEach((offer) => {
+  createMarker(offer);
 });
