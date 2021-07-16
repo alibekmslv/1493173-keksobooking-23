@@ -2,7 +2,6 @@ import { generatedOffers } from './data.js';
 
 const cardFragment = document.querySelector('#card').content;
 const cardTemplate = cardFragment.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
 
 const offersFragment = document.createDocumentFragment();
 
@@ -77,5 +76,3 @@ generatedOffers.forEach(({author: {avatar}, offer: {title, address, price, type,
 
   offersFragment.appendChild(clonedCard);
 });
-
-mapCanvas.appendChild(offersFragment);
