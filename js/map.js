@@ -1,7 +1,10 @@
-import {switchFormToDisabledState, switchFormToActiveState} from './form.js';
+import { switchFormToDisabledState, switchFormToActiveState } from './form.js';
+import { generatedOffers } from './data.js';
+import { createCard } from './card.js';
 import { cutNumber } from './utils/cut-number.js';
 
 const INITIAL_POINT = {lat: 35.68065, lng: 139.76702};
+
 const offerAddressInput = document.querySelector('#address');
 
 switchFormToDisabledState();
@@ -38,4 +41,17 @@ mainPinMarker.addTo(map);
 mainPinMarker.on('moveend', (evt) => {
   const {lat, lng} = evt.target.getLatLng();
   offerAddressInput.value = `${cutNumber(lat, 5)}, ${cutNumber(lng, 5)}`;
+});
+
+generatedOffers.forEach((point) => {
+  const {lat, lng} = point.location;
+
+  const icon = L.icon({
+    iconUrl: '../img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+  });
+
+  const marker = L.marker({lat, lng}, {icon});
+  marker.addTo(map).bindPopup(createCard(point));
 });
