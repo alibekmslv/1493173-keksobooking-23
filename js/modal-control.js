@@ -1,9 +1,15 @@
-import { clonedSuccessModal, onKeydownSuccessModal } from './modal.js';
+import { clonedSuccessModal, successModalKeydownHandler, clonedErrorModal, errorModalKeydownHandler } from './modal.js';
 
 const closeSuccessModal = () => {
-  document.removeEventListener('keydown', onKeydownSuccessModal);
+  document.removeEventListener('keydown', successModalKeydownHandler);
 
   clonedSuccessModal.remove();
 };
 
-export { closeSuccessModal };
+const closeErrorModal = () => {
+  document.removeEventListener('keydown', errorModalKeydownHandler);
+
+  clonedErrorModal.remove();
+};
+
+export { closeSuccessModal, closeErrorModal };
