@@ -1,4 +1,4 @@
-import {getRandomInt, getRandomFloatingPoint} from './utils.js';
+import { getRandomInt, getRandomFloatingPoint } from './utils.js';
 
 const GENERATED_OFFERS_COUNT = 5;
 const OFFER_TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
@@ -68,4 +68,4 @@ const generateOffer = () => {
 
 const generatedOffers = new Array(GENERATED_OFFERS_COUNT).fill(null).map(() => generateOffer());
 
-export {generatedOffers};
+export { generatedOffers };

@@ -1,3 +1,7 @@
+import { setInitialAddress } from './map.js';
+import { postOffer } from './api.js';
+import { showErrorModal, showSuccessModal } from './modal.js';
+
 const addForm = document.querySelector('.ad-form');
 const addFormInteractiveElements = addForm.querySelectorAll('fieldset');
 const mapFilter = document.querySelector('.map__filters');
@@ -27,4 +31,34 @@ const switchFormToActiveState = () => {
   });
 };
 
-export {switchFormToDisabledState, switchFormToActiveState};
+const resetOfferForm = () => {
+  addForm.reset();
+  setTimeout(() => {
+    setInitialAddress();
+  }, 0);
+};
+
+const offerSubmitHandler = (evt) => {
+  evt.preventDefault();
+
+  postOffer(
+    () => {
+      showSuccessModal();
+      resetOfferForm();
+    },
+    (error) => {
+      showErrorModal(error);
+    },
+    new FormData(evt.target));
+};
+
+const offerResetHandler = () => {
+  setTimeout(() => {
+    setInitialAddress();
+  }, 0);
+};
+
+addForm.addEventListener('submit', offerSubmitHandler);
+addForm.addEventListener('reset', offerResetHandler);
+
+export { switchFormToDisabledState, switchFormToActiveState };
