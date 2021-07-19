@@ -33,9 +33,6 @@ const switchFormToActiveState = () => {
 
 const resetOfferForm = () => {
   addForm.reset();
-  setTimeout(() => {
-    setInitialAddress();
-  }, 0);
 };
 
 const offerSubmitHandler = (evt) => {

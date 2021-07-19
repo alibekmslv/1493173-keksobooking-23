@@ -20,7 +20,11 @@ const successModalClickHandler = (evt) => {
   }
 };
 
-const showSuccessModal = () => {
+const showSuccessModal = (message) => {
+  const successMessageElement = clonedSuccessModal.querySelector('.success__message');
+  if (message) {
+    successMessageElement.textContent = message;
+  }
   document.body.appendChild(clonedSuccessModal);
 
   document.addEventListener('keydown', successModalKeydownHandler);
@@ -43,12 +47,17 @@ const errorButtonClickHandler = () => {
   closeErrorModal();
 };
 
-const showErrorModal = (message, buttonText = 'Попровать снова') => {
+const showErrorModal = (message, buttonText) => {
   const errorMessageElement = clonedErrorModal.querySelector('.error__message');
   const errorButton = clonedErrorModal.querySelector('.error__button');
 
-  errorMessageElement.textContent = message;
-  errorButton.textContent = buttonText;
+  if (message) {
+    errorMessageElement.textContent = message;
+  }
+
+  if (buttonText) {
+    errorButton.textContent = buttonText;
+  }
 
   document.addEventListener('keydown', errorModalKeydownHandler);
   clonedErrorModal.addEventListener('click', errorModalClickHandler);

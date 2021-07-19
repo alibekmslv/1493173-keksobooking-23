@@ -7,12 +7,8 @@ const getOffers = (onSuccess, onFail) => {
         throw new Error('Ошибка получения данных.');
       }
     })
-    .then((offers) => {
-      onSuccess(offers);
-    })
-    .catch((error) => {
-      onFail(error);
-    });
+    .then((offers) => onSuccess(offers))
+    .catch((error) => onFail(error.message));
 };
 
 const postOffer = (onSuccess, onFail, formData) => {
@@ -26,8 +22,14 @@ const postOffer = (onSuccess, onFail, formData) => {
       body: formData,
     },
   )
-    .then(() => onSuccess())
-    .catch((error) => onFail(error));
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onFail('Ошибка размещения объявления.');
+      }
+    })
+    .catch(() => onFail('Ошибка размещения объявления.'));
 };
 
 export { getOffers, postOffer };
