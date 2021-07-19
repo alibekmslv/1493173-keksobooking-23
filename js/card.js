@@ -73,4 +73,4 @@ const createCard = ({author: {avatar}, offer: {title, address, price, type, room
   return clonedCard;
 };
 
-export {createCard};
+export { createCard };

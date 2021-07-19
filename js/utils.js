@@ -1,4 +1,12 @@
-function getRandomInt(min, max) {
+const cutNumber = (number, digitsAfterDot) => {
+  const string = number.toString();
+
+  return string.slice(0, string.indexOf('.') + digitsAfterDot + 1);
+};
+
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const getRandomInt = (min, max) => {
   if (min < 0 || max < 0) {
     return null;
   }
@@ -17,10 +25,9 @@ function getRandomInt(min, max) {
   max = Math.floor(max);
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
-
-function getRandomFloatingPoint(min, max, digits) {
+const getRandomFloatingPoint = (min, max, digits) => {
   if (min < 0 || max < 0) {
     return null;
   }
@@ -42,6 +49,6 @@ function getRandomFloatingPoint(min, max, digits) {
   const randomInteger = (Math.random() * (max - min)) + min;
 
   return randomInteger.toFixed(digits);
-}
+};
 
-export {getRandomInt, getRandomFloatingPoint};
+export { getRandomInt, getRandomFloatingPoint, cutNumber, isEscEvent };
