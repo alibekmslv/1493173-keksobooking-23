@@ -1,6 +1,6 @@
 import {getRandomInt, getRandomFloatingPoint} from './utils.js';
 
-const GENERATED_OFFERS_COUNT = 1;
+const GENERATED_OFFERS_COUNT = 5;
 const OFFER_TYPES = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECKIN_OPTIONS = ['12:00', '13:00', '14:00'];
 const OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];

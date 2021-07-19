@@ -1,12 +1,7 @@
-import { generatedOffers } from './data.js';
-
 const cardFragment = document.querySelector('#card').content;
 const cardTemplate = cardFragment.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
 
-const offersFragment = document.createDocumentFragment();
-
-generatedOffers.forEach(({author: {avatar}, offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
+const createCard = ({author: {avatar}, offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
   const clonedCard = cardTemplate.cloneNode(true);
   const cardAvatar = clonedCard.querySelector('.popup__avatar');
   const cardTitle = clonedCard.querySelector('.popup__title');
@@ -75,7 +70,7 @@ generatedOffers.forEach(({author: {avatar}, offer: {title, address, price, type,
     cardPhotos.remove();
   }
 
-  offersFragment.appendChild(clonedCard);
-});
+  return clonedCard;
+};
 
-mapCanvas.appendChild(offersFragment);
+export {createCard};
