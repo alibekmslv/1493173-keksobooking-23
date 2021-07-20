@@ -1,4 +1,4 @@
-const getOffers = (onSuccess, onFail) => {
+const getOffers = (onSuccess, onFailure) => {
   fetch('https://23.javascript.pages.academy/keksobooking/data')
     .then((response) => {
       if (response.ok) {
@@ -8,10 +8,10 @@ const getOffers = (onSuccess, onFail) => {
       }
     })
     .then((offers) => onSuccess(offers))
-    .catch((error) => onFail(error.message));
+    .catch((error) => onFailure(error.message));
 };
 
-const postOffer = (onSuccess, onFail, formData) => {
+const postOffer = (onSuccess, onFailure, formData) => {
   fetch(
     'https://23.javascript.pages.academy/keksobooking',
     {
@@ -26,10 +26,10 @@ const postOffer = (onSuccess, onFail, formData) => {
       if (response.ok) {
         onSuccess();
       } else {
-        onFail('Ошибка размещения объявления.');
+        onFailure('Ошибка размещения объявления.');
       }
     })
-    .catch(() => onFail('Ошибка размещения объявления.'));
+    .catch(() => onFailure('Ошибка размещения объявления.'));
 };
 
 export { getOffers, postOffer };
