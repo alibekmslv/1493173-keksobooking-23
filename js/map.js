@@ -1,4 +1,4 @@
-import { switchFormsToDisabledState, switchFormsToActiveState, offerFormToActiveState } from './form.js';
+import { offerFormToActiveState, pageFormsToDisabledState, pageFormsToActiveState } from './form.js';
 import { createCard } from './card.js';
 import { cutNumber } from './utils.js';
 import { getOffers } from './api.js';
@@ -10,7 +10,7 @@ const INITIAL_OFFERS_QUANTITY = 10;
 
 const offerAddressInput = document.querySelector('#address');
 
-switchFormsToDisabledState();
+pageFormsToDisabledState();
 
 const mainPinIcon = L.icon({
   iconUrl: '../img/main-pin.svg',
@@ -62,7 +62,7 @@ map.on('load', () => {
     (offers) => {
       setOffersFilters(offers);
       renderOffers(offers);
-      switchFormsToActiveState();
+      pageFormsToActiveState();
     },
     (error) => {
       showErrorModal(error, 'Закрыть');
