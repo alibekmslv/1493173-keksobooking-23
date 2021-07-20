@@ -50,7 +50,7 @@ const filterOffers = (offers) => offers
   .filter(({ offer: { rooms } }) => Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any')
   .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
 
-const sortOffersByRating = (offers) => {
+const getOffersByRating = (offers) => {
   const selectedFeatures = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
 
   return filterOffers(offers).slice().sort(compareOffers.bind(null, selectedFeatures)());
@@ -60,14 +60,14 @@ const selects = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, hous
 
 const setSelectsChange = (offers, select, callback) => {
   select.addEventListener('change', () => {
-    const sortedOffers = sortOffersByRating(offers);
+    const sortedOffers = getOffersByRating(offers);
     callback(sortedOffers);
   });
 };
 
 const setFilterFeaturesChange = (offers, callback) => {
   housingFeaturesFieldset.addEventListener('change', () => {
-    const sortedOffers = sortOffersByRating(offers);
+    const sortedOffers = getOffersByRating(offers);
     callback(sortedOffers);
   });
 };
