@@ -24,14 +24,12 @@ const offerTypeMap = {
 
 offerTitleInput.addEventListener('input', () => {
   const valueLength = offerTitleInput.value.length;
-  const {tooShort, tooLong, valueMissing} = offerTitleInput.validity;
+  const { tooShort, tooLong } = offerTitleInput.validity;
 
   if (tooShort) {
     offerTitleInput.setCustomValidity(`Еще ${offerTitleInput.getAttribute('minlength') - valueLength} симв.`);
   } else if (tooLong) {
     offerTitleInput.setCustomValidity(`Удалите лишние ${valueLength - offerTitleInput.getAttribute('maxlength')} симв.`);
-  } else if (valueMissing) {
-    offerTitleInput.setCustomValidity('Обязательное поле');
   } else {
     offerTitleInput.setCustomValidity('');
   }
@@ -42,15 +40,13 @@ offerTitleInput.addEventListener('input', () => {
 offerPriceInput.addEventListener('input', () => {
   const minValue = offerPriceInput.getAttribute('min');
   const maxValue = offerPriceInput.getAttribute('max');
-  const {rangeOverflow, rangeUnderflow, valueMissing} = offerPriceInput.validity;
+  const { rangeOverflow, rangeUnderflow } = offerPriceInput.validity;
   const offerTypeText = offerTypeSelect.options[offerTypeSelect.selectedIndex].text;
 
   if (rangeUnderflow) {
     offerPriceInput.setCustomValidity(`"${offerTypeText}" – минимальная цена за ночь ${minValue}`);
   } else if (rangeOverflow) {
     offerPriceInput.setCustomValidity(`Цена не должна превышать ${maxValue}`);
-  } else if (valueMissing) {
-    offerPriceInput.setCustomValidity('Обязательное поле');
   } else {
     offerPriceInput.setCustomValidity('');
   }
@@ -90,13 +86,13 @@ offerCapacitySelect.addEventListener('change', () => {
 });
 
 
-const checkOfferType = () => {
+const setMinAttributeOfferType = () => {
   offerPriceInput.setAttribute('min', offerTypeMap[offerTypeSelect.value]);
 };
-checkOfferType();
+setMinAttributeOfferType();
 
 offerTypeSelect.addEventListener('change', () => {
-  checkOfferType();
+  setMinAttributeOfferType();
 });
 
 offerCheckinSelect.addEventListener('change', () => {
