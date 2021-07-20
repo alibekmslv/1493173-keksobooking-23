@@ -26,6 +26,12 @@ const mainPinMarker = L.marker(
   },
 );
 
+const offersIcon = L.icon({
+  iconUrl: '../img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
 const setInitialAddress = () => {
   offerAddressInput.value = `${INITIAL_POINT.lat}, ${INITIAL_POINT.lng}`;
 
@@ -39,12 +45,7 @@ const markersGroup = L.layerGroup().addTo(map);
 
 const createMarker = (point) => {
   const { lat, lng } = point.location;
-  const icon = L.icon({
-    iconUrl: '../img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-  const marker = L.marker({ lat, lng }, { icon });
+  const marker = L.marker({ lat, lng }, { icon: offersIcon });
 
   marker.addTo(markersGroup).bindPopup(createCard(point));
 };
