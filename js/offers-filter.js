@@ -29,9 +29,9 @@ const getOfferRank = (offer, featuresSelected) => {
   return rank;
 };
 
-const compareOffers = (featuresSelected) => (offerA, offerB) => {
-  const rankA = getOfferRank(offerA, featuresSelected);
-  const rankB = getOfferRank(offerB, featuresSelected);
+const compareOffers = (selectedFeatures) => (offerA, offerB) => {
+  const rankA = getOfferRank(offerA, selectedFeatures);
+  const rankB = getOfferRank(offerB, selectedFeatures);
 
   return rankB - rankA;
 };
@@ -51,26 +51,24 @@ const filterOffers = (offers) => offers
   .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
 
 const sortOffersByRating = (offers) => {
-  const featuresSelected = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
+  const selectedFeatures = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
 
-  return filterOffers(offers).slice().sort(compareOffers.bind(null, featuresSelected)());
+  return filterOffers(offers).slice().sort(compareOffers.bind(null, selectedFeatures)());
 };
 
 const selects = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, housingGuestsSelect];
 
 const setSelectsChange = (offers, select, callback) => {
   select.addEventListener('change', () => {
-    const sortedOffersByRating = sortOffersByRating(offers);
-
-    callback(sortedOffersByRating);
+    const sortedOffers = sortOffersByRating(offers);
+    callback(sortedOffers);
   });
 };
 
 const setFilterFeaturesChange = (offers, callback) => {
   housingFeaturesFieldset.addEventListener('change', () => {
-    const sortedOffersByRating = sortOffersByRating(offers);
-
-    callback(sortedOffersByRating);
+    const sortedOffers = sortOffersByRating(offers);
+    callback(sortedOffers);
   });
 };
 
@@ -81,8 +79,8 @@ const setMapFilterReset = (offers) => {
 };
 
 const setOffersFilters = (offers) => {
-  selects.forEach((select) => setSelectsChange(offers, select, (filteredOffers) => renderOffers(filteredOffers)));
-  setFilterFeaturesChange(offers, debounce((sortedOffersByRating) => renderOffers(sortedOffersByRating), DEBOUNCE_TIMEOUT));
+  selects.forEach((select) => setSelectsChange(offers, select, (sortedOffers) => renderOffers(sortedOffers)));
+  setFilterFeaturesChange(offers, debounce((sortedOffers) => renderOffers(sortedOffers), DEBOUNCE_TIMEOUT));
   setMapFilterReset(offers);
 };
 
