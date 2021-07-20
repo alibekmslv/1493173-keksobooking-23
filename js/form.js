@@ -1,4 +1,4 @@
-import { setInitialAddress } from './map.js';
+import { setInitialAddress, setMapInitialView } from './map.js';
 import { postOffer } from './api.js';
 import { showErrorModal, showSuccessModal } from './modal.js';
 
@@ -35,6 +35,11 @@ const switchFormsToActiveState = () => {
   });
 };
 
+const resetFilterForm = () => {
+  setMapInitialView();
+  mapFilter.reset();
+};
+
 const resetOfferForm = () => {
   addForm.reset();
 };
@@ -46,6 +51,7 @@ const offerSubmitHandler = (evt) => {
     () => {
       showSuccessModal();
       resetOfferForm();
+      resetFilterForm();
     },
     (error) => {
       showErrorModal(error);
@@ -54,6 +60,7 @@ const offerSubmitHandler = (evt) => {
 };
 
 const offerResetHandler = () => {
+  resetFilterForm();
   setTimeout(() => {
     setInitialAddress();
   }, 0);

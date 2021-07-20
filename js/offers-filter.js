@@ -1,4 +1,4 @@
-import { markersGroup, createMarker, INITIAL_OFFERS_QUANTITY } from './map.js';
+import { renderOffers } from './map.js';
 import { debounce } from './utils/debounce.js';
 import { inRange } from './utils.js';
 
@@ -35,11 +35,6 @@ const compareOffers = (featuresSelected) => (offerA, offerB) => {
   return rankB - rankA;
 };
 
-const renderPoints = (points) => {
-  markersGroup.clearLayers();
-  points.slice(0, INITIAL_OFFERS_QUANTITY).forEach((point) => createMarker(point));
-};
-
 const offerPriceMap = {
   any: { min: 0, max: Infinity },
   low: { min: 0, max: OFFER_PRICE_LOW_BORDER },
@@ -60,11 +55,15 @@ const setMapFiltersChange = (offers) => {
 
     if (evt.target.name === 'features') {
       debounce(() => {
-        renderPoints(sortedOffersByRating);
+        renderOffers(sortedOffersByRating);
       }, DEBOUNCE_TIMEOUT)();
     } else {
-      renderPoints(sortedOffersByRating);
+      renderOffers(sortedOffersByRating);
     }
+  });
+
+  mapFiltersForm.addEventListener('reset', () => {
+    renderOffers(offers);
   });
 };
 

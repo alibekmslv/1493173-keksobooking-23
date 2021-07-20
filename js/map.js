@@ -49,6 +49,10 @@ const createMarker = (point) => {
   marker.addTo(markersGroup).bindPopup(createCard(point));
 };
 
+const renderOffers = (offers) => {
+  markersGroup.clearLayers();
+  offers.slice(0, INITIAL_OFFERS_QUANTITY).forEach((offer) => createMarker(offer));
+};
 
 map.on('load', () => {
   offerAddressInput.readOnly = true;
@@ -56,9 +60,7 @@ map.on('load', () => {
   getOffers(
     (offers) => {
       setMapFiltersChange(offers);
-      offers.slice(0, INITIAL_OFFERS_QUANTITY).forEach((offer) => {
-        createMarker(offer);
-      });
+      renderOffers(offers);
       switchFormsToActiveState();
     },
     (error) => {
@@ -68,7 +70,8 @@ map.on('load', () => {
   );
 });
 
-map.setView(INITIAL_POINT, 12);
+const setMapInitialView = () => map.setView(INITIAL_POINT, 12);
+setMapInitialView();
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
@@ -84,4 +87,4 @@ mainPinMarker.on('moveend', (evt) => {
   offerAddressInput.value = `${cutNumber(lat, 5)}, ${cutNumber(lng, 5)}`;
 });
 
-export { setInitialAddress, markersGroup, createMarker, INITIAL_OFFERS_QUANTITY };
+export { setInitialAddress, setMapInitialView, renderOffers };
