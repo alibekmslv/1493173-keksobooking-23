@@ -1,15 +1,16 @@
-import { switchFormToDisabledState, switchFormToActiveState } from './form.js';
+import { switchFormsToDisabledState, switchFormsToActiveState, offerFormToActiveState } from './form.js';
 import { createCard } from './card.js';
 import { cutNumber } from './utils.js';
 import { getOffers } from './api.js';
 import { showErrorModal } from './modal.js';
+import { setMapFiltersChange } from './offers-filter.js';
 
 const INITIAL_POINT = { lat: 35.68065, lng: 139.76702 };
 const INITIAL_OFFERS_QUANTITY = 10;
 
 const offerAddressInput = document.querySelector('#address');
 
-switchFormToDisabledState();
+switchFormsToDisabledState();
 
 const mainPinIcon = L.icon({
   iconUrl: '../img/main-pin.svg',
@@ -30,13 +31,44 @@ const setInitialAddress = () => {
 
   mainPinMarker.setLatLng(INITIAL_POINT);
 };
+setInitialAddress();
 
-const map = L.map('map-canvas').on('load', () => {
+const map = L.map('map-canvas');
+
+const markersGroup = L.layerGroup().addTo(map);
+
+const createMarker = (point) => {
+  const { lat, lng } = point.location;
+  const icon = L.icon({
+    iconUrl: '../img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+  });
+  const marker = L.marker({ lat, lng }, { icon });
+
+  marker.addTo(markersGroup).bindPopup(createCard(point));
+};
+
+
+map.on('load', () => {
   offerAddressInput.readOnly = true;
 
-  setInitialAddress();
-  switchFormToActiveState();
-}).setView(INITIAL_POINT, 12);
+  getOffers(
+    (offers) => {
+      setMapFiltersChange(offers);
+      offers.slice(0, INITIAL_OFFERS_QUANTITY).forEach((offer) => {
+        createMarker(offer);
+      });
+      switchFormsToActiveState();
+    },
+    (error) => {
+      showErrorModal(error, 'Закрыть');
+      offerFormToActiveState();
+    },
+  );
+});
+
+map.setView(INITIAL_POINT, 12);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
@@ -52,27 +84,4 @@ mainPinMarker.on('moveend', (evt) => {
   offerAddressInput.value = `${cutNumber(lat, 5)}, ${cutNumber(lng, 5)}`;
 });
 
-const createMarker = (point) => {
-  const { lat, lng } = point.location;
-  const icon = L.icon({
-    iconUrl: '../img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-  const marker = L.marker({ lat, lng }, { icon });
-
-  marker.addTo(map).bindPopup(createCard(point));
-};
-
-getOffers(
-  (offers) => {
-    offers.slice(0, INITIAL_OFFERS_QUANTITY).forEach((offer) => {
-      createMarker(offer);
-    });
-  },
-  (error) => {
-    showErrorModal(error, 'Закрыть');
-  },
-);
-
-export { setInitialAddress };
+export { setInitialAddress, markersGroup, createMarker, INITIAL_OFFERS_QUANTITY };
