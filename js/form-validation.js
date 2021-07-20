@@ -86,13 +86,14 @@ offerCapacitySelect.addEventListener('change', () => {
 });
 
 
-const setMinAttributeOfferType = () => {
+const setAttributesOfferType = () => {
   offerPriceInput.setAttribute('min', offerTypeMap[offerTypeSelect.value]);
+  offerPriceInput.setAttribute('placeholder', offerTypeMap[offerTypeSelect.value]);
 };
-setMinAttributeOfferType();
+setAttributesOfferType();
 
 offerTypeSelect.addEventListener('change', () => {
-  setMinAttributeOfferType();
+  setAttributesOfferType();
 });
 
 offerCheckinSelect.addEventListener('change', () => {
