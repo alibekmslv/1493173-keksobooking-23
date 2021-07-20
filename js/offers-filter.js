@@ -12,6 +12,7 @@ const housingPriceSelect = mapFiltersForm.querySelector('#housing-price');
 const housingRoomsSelect = mapFiltersForm.querySelector('#housing-rooms');
 const housingGuestsSelect = mapFiltersForm.querySelector('#housing-guests');
 const housingFeaturesNodeList = mapFiltersForm.querySelectorAll('[name="features"]');
+const housingFeaturesFieldset = mapFiltersForm.querySelector('#housing-features');
 
 const getOfferRank = (offer, featuresSelected) => {
   let rank = 0;
@@ -38,33 +39,51 @@ const compareOffers = (featuresSelected) => (offerA, offerB) => {
 const offerPriceMap = {
   any: { min: 0, max: Infinity },
   low: { min: 0, max: OFFER_PRICE_LOW_BORDER },
-  middle: { min: OFFER_PRICE_LOW_BORDER, max: OFFER_PRICE_MIDDLE_BORDER},
-  high: { min: OFFER_PRICE_MIDDLE_BORDER, max: Infinity},
+  middle: { min: OFFER_PRICE_LOW_BORDER, max: OFFER_PRICE_MIDDLE_BORDER },
+  high: { min: OFFER_PRICE_MIDDLE_BORDER, max: Infinity },
 };
 
-const setMapFiltersChange = (offers) => {
-  mapFiltersForm.addEventListener('change', (evt) => {
-    const filteredOffers = offers
-      .filter(({ offer: { type } }) => housingTypeSelect.value === type || housingTypeSelect.value === 'any')
-      .filter(({ offer: { price } }) => inRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max))
-      .filter(({ offer: { rooms } }) => Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any')
-      .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
 
-    const featuresSelected = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
-    const sortedOffersByRating = filteredOffers.slice().sort(compareOffers.bind(null, featuresSelected)());
+const filterOffers = (offers) => offers
+  .filter(({ offer: { type } }) => housingTypeSelect.value === type || housingTypeSelect.value === 'any')
+  .filter(({ offer: { price } }) => inRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max))
+  .filter(({ offer: { rooms } }) => Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any')
+  .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
 
-    if (evt.target.name === 'features') {
-      debounce(() => {
-        renderOffers(sortedOffersByRating);
-      }, DEBOUNCE_TIMEOUT)();
-    } else {
-      renderOffers(sortedOffersByRating);
-    }
+const sortOffersByRating = (offers) => {
+  const featuresSelected = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
+
+  return filterOffers(offers).slice().sort(compareOffers.bind(null, featuresSelected)());
+};
+
+const selects = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, housingGuestsSelect];
+
+const setSelectsChange = (offers, select, callback) => {
+  select.addEventListener('change', () => {
+    const sortedOffersByRating = sortOffersByRating(offers);
+
+    callback(sortedOffersByRating);
   });
+};
 
+const setFilterFeaturesChange = (offers, callback) => {
+  housingFeaturesFieldset.addEventListener('change', () => {
+    const sortedOffersByRating = sortOffersByRating(offers);
+
+    callback(sortedOffersByRating);
+  });
+};
+
+const setMapFilterReset = (offers) => {
   mapFiltersForm.addEventListener('reset', () => {
     renderOffers(offers);
   });
 };
 
-export { setMapFiltersChange };
+const setOffersFilters = (offers) => {
+  selects.forEach((select) => setSelectsChange(offers, select, (filteredOffers) => renderOffers(filteredOffers)));
+  setFilterFeaturesChange(offers, debounce((sortedOffersByRating) => renderOffers(sortedOffersByRating), DEBOUNCE_TIMEOUT));
+  setMapFilterReset(offers);
+};
+
+export { setOffersFilters };

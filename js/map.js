@@ -3,7 +3,7 @@ import { createCard } from './card.js';
 import { cutNumber } from './utils.js';
 import { getOffers } from './api.js';
 import { showErrorModal } from './modal.js';
-import { setMapFiltersChange } from './offers-filter.js';
+import { setOffersFilters } from './offers-filter.js';
 
 const INITIAL_POINT = { lat: 35.68065, lng: 139.76702 };
 const INITIAL_OFFERS_QUANTITY = 10;
@@ -60,7 +60,7 @@ map.on('load', () => {
 
   getOffers(
     (offers) => {
-      setMapFiltersChange(offers);
+      setOffersFilters(offers);
       renderOffers(offers);
       switchFormsToActiveState();
     },
