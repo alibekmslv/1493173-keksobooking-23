@@ -6,6 +6,8 @@ const cutNumber = (number, digitsAfterDot) => {
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
+const inRange = (num, init, final) => (Math.min(init, final) <= num && num <= Math.max(init, final));
+
 const getRandomInt = (min, max) => {
   if (min < 0 || max < 0) {
     return null;
@@ -51,4 +53,4 @@ const getRandomFloatingPoint = (min, max, digits) => {
   return randomInteger.toFixed(digits);
 };
 
-export { getRandomInt, getRandomFloatingPoint, cutNumber, isEscEvent };
+export { getRandomInt, getRandomFloatingPoint, cutNumber, isEscEvent, inRange };

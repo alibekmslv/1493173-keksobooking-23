@@ -7,7 +7,14 @@ const addFormInteractiveElements = addForm.querySelectorAll('fieldset');
 const mapFilter = document.querySelector('.map__filters');
 const mapFilterInteractiveElements = [...mapFilter.querySelectorAll('select'), ...mapFilter.querySelectorAll('fieldset')];
 
-const switchFormToDisabledState = () => {
+const offerFormToActiveState = () => {
+  addForm.classList.remove('ad-form--disabled');
+  addFormInteractiveElements.forEach((item) => {
+    item.disabled = false;
+  });
+};
+
+const switchFormsToDisabledState = () => {
   addForm.classList.add('ad-form--disabled');
   addFormInteractiveElements.forEach((item) => {
     item.disabled = true;
@@ -19,11 +26,8 @@ const switchFormToDisabledState = () => {
   });
 };
 
-const switchFormToActiveState = () => {
-  addForm.classList.remove('ad-form--disabled');
-  addFormInteractiveElements.forEach((item) => {
-    item.disabled = false;
-  });
+const switchFormsToActiveState = () => {
+  offerFormToActiveState();
 
   mapFilter.classList.remove('map__filters--disabled');
   mapFilterInteractiveElements.forEach((item) => {
@@ -58,4 +62,4 @@ const offerResetHandler = () => {
 addForm.addEventListener('submit', offerSubmitHandler);
 addForm.addEventListener('reset', offerResetHandler);
 
-export { switchFormToDisabledState, switchFormToActiveState };
+export { offerFormToActiveState, switchFormsToDisabledState, switchFormsToActiveState };
