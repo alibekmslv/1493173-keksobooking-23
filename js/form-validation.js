@@ -6,14 +6,14 @@ const HOTEL_MIN_PRICE = 3000;
 const HOUSE_MIN_PRICE = 5000;
 const PALACE_MIN_PRICE = 10000;
 
-const addForm = document.querySelector('.ad-form');
-const offerTitleInput = addForm.querySelector('#title');
-const offerPriceInput = addForm.querySelector('#price');
-const offerRoomsQuantitySelect = addForm.querySelector('#room_number');
-const offerCapacitySelect = addForm.querySelector('#capacity');
-const offerTypeSelect = addForm.querySelector('#type');
-const offerCheckinSelect = addForm.querySelector('#timein');
-const offerCheckoutSelect = addForm.querySelector('#timeout');
+const offerForm = document.querySelector('.ad-form');
+const titleInputElement = offerForm.querySelector('#title');
+const priceInputElement = offerForm.querySelector('#price');
+const roomQuantitySelectElement = offerForm.querySelector('#room_number');
+const roomCapacitySelectElement = offerForm.querySelector('#capacity');
+const typeSelectElement = offerForm.querySelector('#type');
+const checkinSelectElement = offerForm.querySelector('#timein');
+const checkoutSelectElement = offerForm.querySelector('#timeout');
 const offerTypeMap = {
   bungalow: BUNGALOW_MIN_PRICE,
   flat: FLAT_MIN_PRICE,
@@ -22,87 +22,88 @@ const offerTypeMap = {
   palace: PALACE_MIN_PRICE,
 };
 
-offerTitleInput.addEventListener('input', () => {
-  const valueLength = offerTitleInput.value.length;
-  const {tooShort, tooLong, valueMissing} = offerTitleInput.validity;
+titleInputElement.addEventListener('input', () => {
+  const valueLength = titleInputElement.value.length;
+  const { tooShort, tooLong, valueMissing } = titleInputElement.validity;
 
   if (tooShort) {
-    offerTitleInput.setCustomValidity(`Еще ${offerTitleInput.getAttribute('minlength') - valueLength} симв.`);
+    titleInputElement.setCustomValidity(`Еще ${titleInputElement.getAttribute('minlength') - valueLength} симв.`);
   } else if (tooLong) {
-    offerTitleInput.setCustomValidity(`Удалите лишние ${valueLength - offerTitleInput.getAttribute('maxlength')} симв.`);
+    titleInputElement.setCustomValidity(`Удалите лишние ${valueLength - titleInputElement.getAttribute('maxlength')} симв.`);
   } else if (valueMissing) {
-    offerTitleInput.setCustomValidity('Обязательное поле');
+    titleInputElement.setCustomValidity('Обязательное поле');
   } else {
-    offerTitleInput.setCustomValidity('');
+    titleInputElement.setCustomValidity('');
   }
 
-  offerTitleInput.reportValidity();
+  titleInputElement.reportValidity();
 });
 
-offerPriceInput.addEventListener('input', () => {
-  const minValue = offerPriceInput.getAttribute('min');
-  const maxValue = offerPriceInput.getAttribute('max');
-  const {rangeOverflow, rangeUnderflow, valueMissing} = offerPriceInput.validity;
-  const offerTypeText = offerTypeSelect.options[offerTypeSelect.selectedIndex].text;
+priceInputElement.addEventListener('input', () => {
+  const minValue = priceInputElement.getAttribute('min');
+  const maxValue = priceInputElement.getAttribute('max');
+  const { rangeOverflow, rangeUnderflow, valueMissing } = priceInputElement.validity;
+  const offerTypeText = typeSelectElement.options[typeSelectElement.selectedIndex].text;
 
   if (rangeUnderflow) {
-    offerPriceInput.setCustomValidity(`"${offerTypeText}" – минимальная цена за ночь ${minValue}`);
+    priceInputElement.setCustomValidity(`"${offerTypeText}" – минимальная цена за ночь ${minValue}`);
   } else if (rangeOverflow) {
-    offerPriceInput.setCustomValidity(`Цена не должна превышать ${maxValue}`);
+    priceInputElement.setCustomValidity(`Цена не должна превышать ${maxValue}`);
   } else if (valueMissing) {
-    offerPriceInput.setCustomValidity('Обязательное поле');
+    priceInputElement.setCustomValidity('Обязательное поле');
   } else {
-    offerPriceInput.setCustomValidity('');
+    priceInputElement.setCustomValidity('');
   }
 
-  offerPriceInput.reportValidity();
+  priceInputElement.reportValidity();
 });
 
-if (offerRoomsQuantitySelect.value < offerCapacitySelect.value) {
-  offerCapacitySelect.setCustomValidity(CAPACITY_VALIDITY_DEFAULT_TEXT);
+if (roomQuantitySelectElement.value < roomCapacitySelectElement.value) {
+  roomCapacitySelectElement.setCustomValidity(CAPACITY_VALIDITY_DEFAULT_TEXT);
 } else {
-  offerCapacitySelect.setCustomValidity('');
+  roomCapacitySelectElement.setCustomValidity('');
 }
 
 const checkRoomsCapacity = () => {
-  const roomsValue = parseFloat(offerRoomsQuantitySelect.value);
-  const capacityValue = parseFloat(offerCapacitySelect.value);
+  const roomsValue = parseFloat(roomQuantitySelectElement.value);
+  const capacityValue = parseFloat(roomCapacitySelectElement.value);
 
   if (roomsValue >= MAX_ROOMS_VALUE && capacityValue !== 0) {
-    offerCapacitySelect.setCustomValidity(`${MAX_ROOMS_VALUE} комнат – не для гостей`);
+    roomCapacitySelectElement.setCustomValidity(`${MAX_ROOMS_VALUE} комнат – не для гостей`);
   } else if (roomsValue < MAX_ROOMS_VALUE && capacityValue === 0) {
-    offerCapacitySelect.setCustomValidity(`${roomsValue} комн. для гостей`);
+    roomCapacitySelectElement.setCustomValidity(`${roomsValue} комн. для гостей`);
   } else if (roomsValue >= capacityValue) {
-    offerCapacitySelect.setCustomValidity('');
+    roomCapacitySelectElement.setCustomValidity('');
   } else {
-    offerCapacitySelect.setCustomValidity(CAPACITY_VALIDITY_DEFAULT_TEXT);
+    roomCapacitySelectElement.setCustomValidity(CAPACITY_VALIDITY_DEFAULT_TEXT);
   }
 
-  offerCapacitySelect.reportValidity();
+  roomCapacitySelectElement.reportValidity();
 };
 
-offerRoomsQuantitySelect.addEventListener('change', () => {
+roomQuantitySelectElement.addEventListener('change', () => {
   checkRoomsCapacity();
 });
 
-offerCapacitySelect.addEventListener('change', () => {
+roomCapacitySelectElement.addEventListener('change', () => {
   checkRoomsCapacity();
 });
 
 
-const checkOfferType = () => {
-  offerPriceInput.setAttribute('min', offerTypeMap[offerTypeSelect.value]);
+const setAttributesOfferType = () => {
+  priceInputElement.setAttribute('min', offerTypeMap[typeSelectElement.value]);
+  priceInputElement.setAttribute('placeholder', offerTypeMap[typeSelectElement.value]);
 };
-checkOfferType();
+setAttributesOfferType();
 
-offerTypeSelect.addEventListener('change', () => {
-  checkOfferType();
+typeSelectElement.addEventListener('change', () => {
+  setAttributesOfferType();
 });
 
-offerCheckinSelect.addEventListener('change', () => {
-  offerCheckoutSelect.selectedIndex = offerCheckinSelect.options.selectedIndex;
+checkinSelectElement.addEventListener('change', () => {
+  checkoutSelectElement.selectedIndex = checkinSelectElement.options.selectedIndex;
 });
 
-offerCheckoutSelect.addEventListener('change', () => {
-  offerCheckinSelect.selectedIndex = offerCheckoutSelect.options.selectedIndex;
+checkoutSelectElement.addEventListener('change', () => {
+  checkinSelectElement.selectedIndex = checkoutSelectElement.options.selectedIndex;
 });

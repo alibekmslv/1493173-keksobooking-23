@@ -3,49 +3,49 @@ const cardTemplate = cardFragment.querySelector('.popup');
 
 const createCard = ({author: {avatar}, offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
   const clonedCard = cardTemplate.cloneNode(true);
-  const cardAvatar = clonedCard.querySelector('.popup__avatar');
-  const cardTitle = clonedCard.querySelector('.popup__title');
-  const cardAddress = clonedCard.querySelector('.popup__text--address');
-  const cardPrice = clonedCard.querySelector('.popup__text--price');
-  const cardType = clonedCard.querySelector('.popup__type');
-  const cardCapacity = clonedCard.querySelector('.popup__text--capacity');
-  const cardTime = clonedCard.querySelector('.popup__text--time');
-  const cardFeatures = clonedCard.querySelector('.popup__features');
-  const cardDescription = clonedCard.querySelector('.popup__description');
-  const cardPhotos = clonedCard.querySelector('.popup__photos');
+  const avatarElement = clonedCard.querySelector('.popup__avatar');
+  const titleElement = clonedCard.querySelector('.popup__title');
+  const addressElement = clonedCard.querySelector('.popup__text--address');
+  const priceElement = clonedCard.querySelector('.popup__text--price');
+  const typeElement = clonedCard.querySelector('.popup__type');
+  const capacityElement = clonedCard.querySelector('.popup__text--capacity');
+  const timeElement = clonedCard.querySelector('.popup__text--time');
+  const featuresElement = clonedCard.querySelector('.popup__features');
+  const descriptionElement = clonedCard.querySelector('.popup__description');
+  const photosElement = clonedCard.querySelector('.popup__photos');
 
-  avatar ? cardAvatar.src = avatar : cardAvatar.remove();
-  title ? cardTitle.textContent = title : cardTitle.remove();
-  address ? cardAddress.textContent = address : cardAddress.remove();
-  price ? cardPrice.textContent = `${price} + ₽/ночь` : cardPrice.remove();
+  avatar ? avatarElement.src = avatar : avatarElement.remove();
+  title ? titleElement.textContent = title : titleElement.remove();
+  address ? addressElement.textContent = address : addressElement.remove();
+  price ? priceElement.textContent = `${price} + ₽/ночь` : priceElement.remove();
 
   switch (type) {
     case 'palace':
-      cardType.textContent = 'Дворец';
+      typeElement.textContent = 'Дворец';
       break;
     case 'flat':
-      cardType.textContent = 'Квартира';
+      typeElement.textContent = 'Квартира';
       break;
     case 'house':
-      cardType.textContent = 'Дом';
+      typeElement.textContent = 'Дом';
       break;
     case 'bungalow':
-      cardType.textContent = 'Бунгало';
+      typeElement.textContent = 'Бунгало';
       break;
     case 'hotel':
-      cardType.textContent = 'Отель';
+      typeElement.textContent = 'Отель';
       break;
     default:
-      cardType.remove();
+      typeElement.remove();
       break;
   }
 
-  rooms && guests ? cardCapacity.textContent = `${rooms} комнаты для ${guests} гостей` : cardCapacity.remove();
-  checkin && checkout ? cardTime.textContent = `Заезд после ${checkin}, выезд до ${checkout}` : cardCapacity.remove();
+  rooms && guests ? capacityElement.textContent = `${rooms} комнаты для ${guests} гостей` : capacityElement.remove();
+  checkin && checkout ? timeElement.textContent = `Заезд после ${checkin}, выезд до ${checkout}` : capacityElement.remove();
 
   if (features) {
     const modifiers = features.map((feature) => `popup__feature--${feature}`);
-    cardFeatures.querySelectorAll('.popup__feature').forEach((item) => {
+    featuresElement.querySelectorAll('.popup__feature').forEach((item) => {
       const modifier = item.classList[1];
 
       if(!modifiers.includes(modifier)) {
@@ -53,21 +53,21 @@ const createCard = ({author: {avatar}, offer: {title, address, price, type, room
       }
     });
   } else {
-    cardFeatures.remove();
+    featuresElement.remove();
   }
 
-  description ? cardDescription.textContent = description : cardDescription.remove();
+  description ? descriptionElement.textContent = description : descriptionElement.remove();
 
   if (photos) {
-    const cardPhoto = cardPhotos.querySelector('.popup__photo');
+    const cardPhoto = photosElement.querySelector('.popup__photo');
     cardPhoto.remove();
     photos.forEach((photo) => {
       const clonedPhoto = cardPhoto.cloneNode(false);
       clonedPhoto.src = photo;
-      cardPhotos.appendChild(clonedPhoto);
+      photosElement.appendChild(clonedPhoto);
     });
   } else {
-    cardPhotos.remove();
+    photosElement.remove();
   }
 
   return clonedCard;

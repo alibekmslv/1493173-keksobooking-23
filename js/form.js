@@ -1,51 +1,57 @@
-import { setInitialAddress } from './map.js';
+import { setInitialAddress, setMapInitialView } from './map.js';
 import { postOffer } from './api.js';
 import { showErrorModal, showSuccessModal } from './modal.js';
 
-const addForm = document.querySelector('.ad-form');
-const addFormInteractiveElements = addForm.querySelectorAll('fieldset');
-const mapFilter = document.querySelector('.map__filters');
-const mapFilterInteractiveElements = [...mapFilter.querySelectorAll('select'), ...mapFilter.querySelectorAll('fieldset')];
+const offerForm = document.querySelector('.ad-form');
+const offerFormInteractiveElements = offerForm.querySelectorAll('fieldset');
+const filterForm = document.querySelector('.map__filters');
+const filterFormInteractiveElements = [...filterForm.querySelectorAll('select'), ...filterForm.querySelectorAll('fieldset')];
 
 const offerFormToActiveState = () => {
-  addForm.classList.remove('ad-form--disabled');
-  addFormInteractiveElements.forEach((item) => {
+  offerForm.classList.remove('ad-form--disabled');
+  offerFormInteractiveElements.forEach((item) => {
     item.disabled = false;
   });
 };
 
-const switchFormsToDisabledState = () => {
-  addForm.classList.add('ad-form--disabled');
-  addFormInteractiveElements.forEach((item) => {
+const pageFormsToDisabledState = () => {
+  offerForm.classList.add('ad-form--disabled');
+  offerFormInteractiveElements.forEach((item) => {
     item.disabled = true;
   });
 
-  mapFilter.classList.add('map__filters--disabled');
-  mapFilterInteractiveElements.forEach((item) => {
+  filterForm.classList.add('map__filters--disabled');
+  filterFormInteractiveElements.forEach((item) => {
     item.disabled = true;
   });
 };
 
-const switchFormsToActiveState = () => {
+const pageFormsToActiveState = () => {
   offerFormToActiveState();
 
-  mapFilter.classList.remove('map__filters--disabled');
-  mapFilterInteractiveElements.forEach((item) => {
+  filterForm.classList.remove('map__filters--disabled');
+  filterFormInteractiveElements.forEach((item) => {
     item.disabled = false;
   });
+};
+
+const resetFilterForm = () => {
+  setMapInitialView();
+  filterForm.reset();
 };
 
 const resetOfferForm = () => {
-  addForm.reset();
+  offerForm.reset();
 };
 
-const offerSubmitHandler = (evt) => {
+const offerFormSubmitHandler = (evt) => {
   evt.preventDefault();
 
   postOffer(
     () => {
       showSuccessModal();
       resetOfferForm();
+      resetFilterForm();
     },
     (error) => {
       showErrorModal(error);
@@ -53,13 +59,14 @@ const offerSubmitHandler = (evt) => {
     new FormData(evt.target));
 };
 
-const offerResetHandler = () => {
+const offerFormResetHandler = () => {
+  resetFilterForm();
   setTimeout(() => {
     setInitialAddress();
   }, 0);
 };
 
-addForm.addEventListener('submit', offerSubmitHandler);
-addForm.addEventListener('reset', offerResetHandler);
+offerForm.addEventListener('submit', offerFormSubmitHandler);
+offerForm.addEventListener('reset', offerFormResetHandler);
 
-export { offerFormToActiveState, switchFormsToDisabledState, switchFormsToActiveState };
+export { offerFormToActiveState, pageFormsToDisabledState, pageFormsToActiveState };
