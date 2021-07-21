@@ -1,5 +1,27 @@
 const cardFragment = document.querySelector('#card').content;
 const cardTemplate = cardFragment.querySelector('.popup');
+const typeMap = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalow: 'Бунгало',
+  hotel: 'Отель',
+};
+const featuresOrderMap = {
+  wifi: 1,
+  dishwasher: 2,
+  parking: 3,
+  washer: 4,
+  elevator: 5,
+  conditioner: 6,
+};
+
+const compareFeatures = (featureA, featureB) => {
+  const rankA = featuresOrderMap[featureA];
+  const rankB = featuresOrderMap[featureB];
+
+  return rankA - rankB;
+};
 
 const createCard = ({author: {avatar}, offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
   const clonedCard = cardTemplate.cloneNode(true);
@@ -14,58 +36,83 @@ const createCard = ({author: {avatar}, offer: {title, address, price, type, room
   const descriptionElement = clonedCard.querySelector('.popup__description');
   const photosElement = clonedCard.querySelector('.popup__photos');
 
-  avatar ? avatarElement.src = avatar : avatarElement.remove();
-  title ? titleElement.textContent = title : titleElement.remove();
-  address ? addressElement.textContent = address : addressElement.remove();
-  price ? priceElement.textContent = `${price} + ₽/ночь` : priceElement.remove();
-
-  switch (type) {
-    case 'palace':
-      typeElement.textContent = 'Дворец';
-      break;
-    case 'flat':
-      typeElement.textContent = 'Квартира';
-      break;
-    case 'house':
-      typeElement.textContent = 'Дом';
-      break;
-    case 'bungalow':
-      typeElement.textContent = 'Бунгало';
-      break;
-    case 'hotel':
-      typeElement.textContent = 'Отель';
-      break;
-    default:
-      typeElement.remove();
-      break;
+  if (avatar) {
+    avatarElement.src = avatar;
+  } else {
+    avatarElement.remove();
   }
 
-  rooms && guests ? capacityElement.textContent = `${rooms} комнаты для ${guests} гостей` : capacityElement.remove();
-  checkin && checkout ? timeElement.textContent = `Заезд после ${checkin}, выезд до ${checkout}` : capacityElement.remove();
+  if (title) {
+    titleElement.textContent = title;
+  } else {
+    titleElement.remove();
+  }
 
-  if (features) {
-    const modifiers = features.map((feature) => `popup__feature--${feature}`);
-    featuresElement.querySelectorAll('.popup__feature').forEach((item) => {
-      const modifier = item.classList[1];
+  if (address) {
+    addressElement.textContent = address;
+  } else {
+    addressElement.remove();
+  }
 
-      if(!modifiers.includes(modifier)) {
-        item.remove();
-      }
+  if (price) {
+    priceElement.textContent = `${price} + ₽/ночь`;
+  } else {
+    priceElement.remove();
+  }
+
+  if (type) {
+    typeElement.textContent = typeMap[type];
+  } else {
+    typeElement.remove();
+  }
+
+  if (rooms && guests) {
+    capacityElement.textContent = `${rooms} комнаты для ${guests} гостей`;
+  } else {
+    capacityElement.remove();
+  }
+
+  if (checkin && checkout) {
+    timeElement.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
+  } else {
+    capacityElement.remove();
+  }
+
+  if (features && features.length) {
+    const featuresListFragment = document.createDocumentFragment();
+    const featureItemElement = featuresElement.querySelector('.popup__feature');
+
+    features.slice().sort(compareFeatures).forEach((feature) => {
+      const clonedFeatureItem = featureItemElement.cloneNode(true);
+      clonedFeatureItem.classList.remove('popup__feature--wifi');
+      clonedFeatureItem.classList.add(`popup__feature--${feature}`);
+      featuresListFragment.appendChild(clonedFeatureItem);
     });
+
+    featuresElement.innerHTML = '';
+    featuresElement.appendChild(featuresListFragment);
   } else {
     featuresElement.remove();
   }
 
-  description ? descriptionElement.textContent = description : descriptionElement.remove();
+  if (description) {
+    descriptionElement.textContent = description;
+  } else {
+    descriptionElement.remove();
+  }
 
-  if (photos) {
-    const cardPhoto = photosElement.querySelector('.popup__photo');
-    cardPhoto.remove();
+  if (photos && photos.length) {
+    const photosListFragment = document.createDocumentFragment();
+    const photoElement = photosElement.querySelector('.popup__photo');
+
     photos.forEach((photo) => {
-      const clonedPhoto = cardPhoto.cloneNode(false);
+      const clonedPhoto = photoElement.cloneNode(false);
       clonedPhoto.src = photo;
-      photosElement.appendChild(clonedPhoto);
+      photosListFragment.appendChild(clonedPhoto);
     });
+
+    photoElement.remove();
+    photosElement.appendChild(photosListFragment);
   } else {
     photosElement.remove();
   }
