@@ -43,12 +43,16 @@ const offerPriceMap = {
   high: { min: OFFER_PRICE_MIDDLE_BORDER, max: Infinity },
 };
 
-
-const filterOffers = (offers) => offers
-  .filter(({ offer: { type } }) => housingTypeSelect.value === type || housingTypeSelect.value === 'any')
-  .filter(({ offer: { price } }) => isInRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max))
-  .filter(({ offer: { rooms } }) => Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any')
-  .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
+const filterOffers = (offers) => offers.filter(({ offer: { type, price, rooms, guests} }) => {
+  if (
+    (housingTypeSelect.value === type || housingTypeSelect.value === 'any') &&
+    isInRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max) &&
+    (Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any') &&
+    (Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any')
+  ) {
+    return true;
+  }
+});
 
 const getOffersByRating = (offers) => {
   const selectedFeatures = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
