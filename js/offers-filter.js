@@ -1,6 +1,6 @@
 import { renderOffers } from './map.js';
 import { debounce } from './utils/debounce.js';
-import { inRange } from './utils.js';
+import { isInRange } from './utils.js';
 
 const DEBOUNCE_TIMEOUT = 500;
 const OFFER_PRICE_LOW_BORDER = 10000;
@@ -43,12 +43,16 @@ const offerPriceMap = {
   high: { min: OFFER_PRICE_MIDDLE_BORDER, max: Infinity },
 };
 
-
-const filterOffers = (offers) => offers
-  .filter(({ offer: { type } }) => housingTypeSelect.value === type || housingTypeSelect.value === 'any')
-  .filter(({ offer: { price } }) => inRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max))
-  .filter(({ offer: { rooms } }) => Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any')
-  .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
+const filterOffers = (offers) => offers.filter(({ offer: { type, price, rooms, guests} }) => {
+  if (
+    (housingTypeSelect.value === type || housingTypeSelect.value === 'any') &&
+    isInRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max) &&
+    (Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any') &&
+    (Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any')
+  ) {
+    return true;
+  }
+});
 
 const getOffersByRating = (offers) => {
   const selectedFeatures = [...housingFeaturesNodeList].filter((item) => item.checked).map((item) => item.value);
@@ -56,7 +60,7 @@ const getOffersByRating = (offers) => {
   return filterOffers(offers).slice().sort(compareOffers.bind(null, selectedFeatures)());
 };
 
-const selects = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, housingGuestsSelect];
+const selectElements = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, housingGuestsSelect];
 
 const setSelectsChange = (offers, select, callback) => {
   select.addEventListener('change', () => {
@@ -79,7 +83,7 @@ const setMapFilterReset = (offers) => {
 };
 
 const setOffersFilters = (offers) => {
-  selects.forEach((select) => setSelectsChange(offers, select, (sortedOffers) => renderOffers(sortedOffers)));
+  selectElements.forEach((select) => setSelectsChange(offers, select, debounce((sortedOffers) => renderOffers(sortedOffers), DEBOUNCE_TIMEOUT)));
   setFilterFeaturesChange(offers, debounce((sortedOffers) => renderOffers(sortedOffers), DEBOUNCE_TIMEOUT));
   setMapFilterReset(offers);
 };

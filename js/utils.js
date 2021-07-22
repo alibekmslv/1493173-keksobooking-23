@@ -6,6 +6,6 @@ const cutNumber = (number, digitsAfterDot) => {
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const inRange = (num, init, final) => (Math.min(init, final) <= num && num <= Math.max(init, final));
+const isInRange = (num, init, final) => (Math.min(init, final) <= num && num <= Math.max(init, final));
 
-export { cutNumber, isEscEvent, inRange };
+export { cutNumber, isEscEvent, isInRange };
