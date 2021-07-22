@@ -7,15 +7,26 @@ import { setOffersFilters } from './offers-filter.js';
 
 const INITIAL_POINT = { lat: 35.68065, lng: 139.76702 };
 const INITIAL_OFFERS_QUANTITY = 10;
+const DEFAULT_PIN_ICON = {
+  url: '../img/main-pin.svg',
+  width: 52,
+  height: 52,
+};
+const DEFAULT_MARKER_ICON = {
+  url: '../img/pin.svg',
+  width: 40,
+  height: 40,
+};
+const MAP_ZOOM = 12;
 
 const offerAddressInput = document.querySelector('#address');
 
 pageFormsToDisabledState();
 
 const mainPinIcon = L.icon({
-  iconUrl: '../img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconUrl: DEFAULT_PIN_ICON.url,
+  iconSize: [DEFAULT_PIN_ICON.width, DEFAULT_PIN_ICON.height],
+  iconAnchor: [DEFAULT_PIN_ICON.width / 2, DEFAULT_PIN_ICON.height],
 });
 
 const mainPinMarker = L.marker(
@@ -27,9 +38,9 @@ const mainPinMarker = L.marker(
 );
 
 const offersIcon = L.icon({
-  iconUrl: '../img/pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconUrl: DEFAULT_MARKER_ICON.url,
+  iconSize: [DEFAULT_MARKER_ICON.width, DEFAULT_MARKER_ICON.height],
+  iconAnchor: [DEFAULT_MARKER_ICON.width / 2, DEFAULT_MARKER_ICON.height],
 });
 
 const setInitialAddress = () => {
@@ -71,7 +82,7 @@ map.on('load', () => {
   );
 });
 
-const setMapInitialView = () => map.setView(INITIAL_POINT, 12);
+const setMapInitialView = () => map.setView(INITIAL_POINT, MAP_ZOOM);
 setMapInitialView();
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

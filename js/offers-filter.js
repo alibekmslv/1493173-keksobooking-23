@@ -1,6 +1,6 @@
 import { renderOffers } from './map.js';
 import { debounce } from './utils/debounce.js';
-import { inRange } from './utils.js';
+import { isInRange } from './utils.js';
 
 const DEBOUNCE_TIMEOUT = 500;
 const OFFER_PRICE_LOW_BORDER = 10000;
@@ -46,7 +46,7 @@ const offerPriceMap = {
 
 const filterOffers = (offers) => offers
   .filter(({ offer: { type } }) => housingTypeSelect.value === type || housingTypeSelect.value === 'any')
-  .filter(({ offer: { price } }) => inRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max))
+  .filter(({ offer: { price } }) => isInRange(price, offerPriceMap[housingPriceSelect.value].min, offerPriceMap[housingPriceSelect.value].max))
   .filter(({ offer: { rooms } }) => Number(housingRoomsSelect.value) === rooms || housingRoomsSelect.value === 'any')
   .filter(({ offer: { guests } }) => Number(housingGuestsSelect.value) === guests || housingGuestsSelect.value === 'any');
 
