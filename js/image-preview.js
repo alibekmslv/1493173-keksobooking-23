@@ -2,11 +2,12 @@ const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const IMAGE_PREVIEW_ATTRIBUTES = {
   width: 70,
   height: 70,
+  alt: 'Фотография жилья',
 };
 
 const defaultPreviewImagesMap = new Map();
 
-const setImagePreviewOnLoad = (fileInputElement, previewContainerElement, { width, height } = IMAGE_PREVIEW_ATTRIBUTES) => {
+const setImagePreviewOnLoad = (fileInputElement, previewContainerElement, { width, height, alt } = IMAGE_PREVIEW_ATTRIBUTES) => {
   const imageElement = document.createElement('img');
   imageElement.width = width;
   imageElement.height = height;
@@ -17,6 +18,9 @@ const setImagePreviewOnLoad = (fileInputElement, previewContainerElement, { widt
 
   if (hasDefaultPreviewImage) {
     defaultPreviewImagesMap.set(previewContainerElement, defaultImagePreviewElement);
+    imageElement.alt = defaultImagePreviewElement.alt;
+  } else {
+    imageElement.alt = alt;
   }
 
   const readerLoadHandler = (evt) => {
