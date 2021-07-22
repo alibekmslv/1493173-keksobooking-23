@@ -1,17 +1,25 @@
 import { setInitialAddress, setMapInitialView } from './map.js';
 import { postOffer } from './api.js';
 import { showErrorModal, showSuccessModal } from './modal.js';
+import { setImagePreviewOnLoad, resetImagePreview } from './image-preview.js';
 
 const offerForm = document.querySelector('.ad-form');
 const offerFormInteractiveElements = offerForm.querySelectorAll('fieldset');
 const filterForm = document.querySelector('.map__filters');
 const filterFormInteractiveElements = [...filterForm.querySelectorAll('select'), ...filterForm.querySelectorAll('fieldset')];
+const offerAvatarFileElement = offerForm.querySelector('#avatar');
+const offerAvatarPreviewContainerElement = offerForm.querySelector('.ad-form-header__preview');
+const offerPhotoFileElement = offerForm.querySelector('#images');
+const offerPhotoPreviewContainerElement = offerForm.querySelector('.ad-form__photo');
 
 const offerFormToActiveState = () => {
   offerForm.classList.remove('ad-form--disabled');
   offerFormInteractiveElements.forEach((item) => {
     item.disabled = false;
   });
+
+  setImagePreviewOnLoad(offerAvatarFileElement, offerAvatarPreviewContainerElement);
+  setImagePreviewOnLoad(offerPhotoFileElement, offerPhotoPreviewContainerElement);
 };
 
 const pageFormsToDisabledState = () => {
@@ -61,6 +69,8 @@ const offerFormSubmitHandler = (evt) => {
 
 const offerFormResetHandler = () => {
   resetFilterForm();
+  resetImagePreview(offerAvatarPreviewContainerElement);
+  resetImagePreview(offerPhotoPreviewContainerElement);
   setTimeout(() => {
     setInitialAddress();
   }, 0);
