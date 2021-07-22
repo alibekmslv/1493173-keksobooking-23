@@ -56,7 +56,7 @@ const getOffersByRating = (offers) => {
   return filterOffers(offers).slice().sort(compareOffers.bind(null, selectedFeatures)());
 };
 
-const selects = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, housingGuestsSelect];
+const selectElements = [housingTypeSelect, housingPriceSelect, housingRoomsSelect, housingGuestsSelect];
 
 const setSelectsChange = (offers, select, callback) => {
   select.addEventListener('change', () => {
@@ -79,7 +79,7 @@ const setMapFilterReset = (offers) => {
 };
 
 const setOffersFilters = (offers) => {
-  selects.forEach((select) => setSelectsChange(offers, select, (sortedOffers) => renderOffers(sortedOffers)));
+  selectElements.forEach((select) => setSelectsChange(offers, select, debounce((sortedOffers) => renderOffers(sortedOffers), DEBOUNCE_TIMEOUT)));
   setFilterFeaturesChange(offers, debounce((sortedOffers) => renderOffers(sortedOffers), DEBOUNCE_TIMEOUT));
   setMapFilterReset(offers);
 };
